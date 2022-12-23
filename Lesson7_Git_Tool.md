@@ -156,3 +156,145 @@ git ls-tree -r HEAD : 각 파일의 SHA-1 체크섬을 보여줌
 커밋 전에는 Index(Staging Area)에 올려놓고 얼마든지 변경할 수 있다
 
 - 워크플로
+
+7.8 고급 Merge
+오랫동안 합치지 않은 두 브랜치를 한 번에 Merge하면 거대한 충돌이 발생한다. 조그마한 충돌을 자주 겪고 그걸 풀어나감으로써 브랜치를 최신으로 유지하는 것이 낫다
+
+- Merge충돌
+git merge whitespace
+
+- Merge 취소
+git merge --abort
+git reset --hard HEAD
+완전히 되돌리지 못하는 유일한 경우는 Merge 전의 워킹 디렉토리에서 Stash하지 않았거나 커밋하지 않은 파일이 있었을 경우
+
+- 공백 무시
+git merge -Xignore-space-all
+git merge -Xignore-space-change
+ex) git merge -Xignore-space-change whitespace
+
+- 수동으로 merge하기
+git show
+git ls-files -u
+git merge-file
+git diff --ours
+git diff --theirs
+git diff --base
+
+- 충돌파일 checkout
+git checkout --conflict=diff3 hello.rb
+
+- Merge 로그
+git log --oneline --left-right HEAD...MERGE_HEAD
+git log --oneline --left-right --merge
+
+- Combined Diff 형식
+git diff
+git log --cc -p -1
+
+- Merge 되돌리기
+Refs 수정 : 로컬에만 있을때는 브랜치를 원하는 커밋으로 옮긴다. 잘못 Merge하고 나서 git reset --hard HEAD~ 명령으로 브랜치를 되돌리면 된다.
+커밋 되돌리기(revert) : 브랜치를 옮기지 못할 경우 모든 변경사항을 취소하는 새로운 커밋을 만들 수 있다. 
+git revert -m 1 HEAD
+
+- 다른 방식의 Merge
+Merge는 보통 recursive 전략을 사용한다. 브랜치를 한번에 Merge하는 방법은 여러 가지다
+Our/Their 선택하기 : 두 브랜치 중 한쪽을 선택하여 Merge
+git merge -Xours mundo
+git merge -Xtheirs mundo
+거짓 merge : our 브랜치 코드를 그대로 사용하고 Merge한 것처럼 기록한다
+git merge -s ours mundo
+
+- 서브트리 Merge
+프로젝트가 2개 있을 때 한 프로젝트를 다른 프로젝트의 하위 디렉토리로 매핑하여 사용하는 방법
+git read-tree --prefix=rack/ -u rack_branch
+git checkout rack_branch
+git pull
+git checkout master
+git merge --squash -s resursive -Xsubtree=rack rack_branch
+git diff-tree -p rack_branch
+
+7.9 Rerere
+“resue recorded resolution"은 기록한 해결책 재사용하기라는 뜻 
+git rerere status
+git rerere diff
+
+7.10 Git으로 버그 찾기
+git blame
+git blame -C 
+
+- 이진탐색
+git bisect start
+git bisect bad
+git bisect good v1.0
+git bisect reset
+
+7.11 서브모듈
+프로젝트를 수행하다 보면 다른 프로젝트를 함께 사용해야 하는 경우가 있다. 두 프로젝트를 서로 별개로 다루면서 그중 하나를 다른 하나 안에서 사용할 수 있어야 한다.
+
+- 서브모듈 시작하기
+git submodule add [저장소 주소]
+git config submodule.DbConnector.url PRIVATE_URL
+git diff --cached DbConnector : DbConnector 디렉터리를 서브모듈로 취급하기 때문에 해당 디렉터리 아래의 파일 수정사항을 직접 추적하지 않는다. 대신 통째로 특별한 커밋으로 취급한다.
+git diff --cached --submodule
+
+- 서브모듈 포함한 프로젝트 Clone
+기본적으로 서브모듈 디렉터리는 빈 디렉터리다
+git submodule init
+git submodule update
+git clone -recursive [저장소 주소]
+
+- 서브모듈 포함한 프로젝트 작업
+서브모듈 업데이트
+서브모듈 디렉터리에서 git fetch > git merge
+git submodule update --remote DbConnector
+git config.submodulesummary 서브모듈의 변경사항을 간단히 보여줌
+git log -p --submodule
+
+- 서브모듈 관리하기
+서브모듈 디렉터리로 가서 브랜치를 Checkout
+git checkout stable
+git submodule update --remote --merge
+
+- 서브모듈 수정 사항 공유하기
+서브모듈의 변경사항을 Push하지 않은 채로 메인 프로젝트에서 커밋을 Push하면 안된다. 이런 불상사가 발생하지 않도록 Push 했는지 검사하도록 Git에 물어본다
+git push --recurse-submodules=check
+git push --recurse-submodules=on-demand : Git이 메인 프로젝트를 Push하기 전에 DbConnector 모듈로 들어가서 Push한다
+
+- 서브모듈 Merge하기
+1. 먼저 충돌을 해결한다.
+2. 메인 프로젝트로 돌아간다.
+3. SHA-1을 검사한다
+4. 충돌난 서브모듈을 해결한다
+5. Merge 결과를 커밋한다
+
+- 서브모듈 팁
+Foreach
+git submodule foreach 'git stash'
+git submodule foreach 'git checkout -b featureA'
+git submodule foreach 'git diff'
+
+- 유용한 Alias
+
+- 서브모듈을 사용할 때 주의할 점들
+서브모듈의 코드를 수정하는 경우에 주의를 요한다
+
+7.12 Bundle
+데이터를 한 파일에 몰아넣는 것
+git bundle create repo.bundle HEAD master
+git clone repo.bundle repo 
+git bundle verify ../commits,bundle
+git bundle list-head ../commits.bundle
+git fetch ../commits.bundle master:other-master
+
+7.13 Replace
+저장한 Git의 개체는 기본적으로 변경할 수 없다. 하지만 변경된 것처럼 보이게는 가능하다.
+1) 전체 히스토리 유지
+git branch history [SHA-1]
+git remote add project-history [저장소 주소]
+git push project-history history:master
+2) 최신 커밋 몇 개만 유지
+git commit-tree [SHA-1]^{tree}
+git rebase --onto [commit-tree SHA-1] [SHA-1]
+
+7.14 Credential 저장소
