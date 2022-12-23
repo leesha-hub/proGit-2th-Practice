@@ -298,3 +298,6 @@ git commit-tree [SHA-1]^{tree}
 git rebase --onto [commit-tree SHA-1] [SHA-1]
 
 7.14 Credential 저장소
+SSH 프로토콜을 사용하여 리모트 저장소에 접근할 때 Passphase 없이 생성한 SSH Key를 사용하면 사용자의 이름과 비밀번호를 입력하지 않고도 안전하게 데이터를 주고받을 수 있다. 반면 HTTP 프로토콜을 사용하는 경우는 매번 사용자 이름과 비밀번호를 입력해야 한다.
+
+Git은 인증정보(Credential)를 입력하는 경우 인증정보를 저장해두고 자동으로 입력해주는 시스템을 제공한다.
