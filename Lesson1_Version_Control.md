@@ -1,7 +1,7 @@
 ProGit 1장. 버전관리란?
 
 1.1 버전관리란?</br>
-버전관리시스템은 파일 변화를 시간에 따라 기록했다가 나중에 특정시점의 버전을 다시 꺼내올수 있는 시스템</br>
+버전관리시스템은 파일 변화를 시간에 따라 기록했다가 나중에 특정시점의 버전을 다시 꺼내올수 있는 시스템을 말한다</br>
 ⁃ 로컬 버전 관리(Version Control): 디렉터리로 파일을 복사하는 방법</br>
 ⁃ 중앙집중식 버전 관리(Center Version Control) : 파일을 관리하는 서버가 별도로 존재하고 클라이언트가 중앙에서 파일을 다운받아 사용</br>
 ⁃ 분산 버전 관리 시스템(Divide Version Control) : 저장소를 전부 복제하는 방식. Checkout은 모든 데이터를 가진 진정한 백업. 리모트 저장소가 존재하여 협업 가능</br> 
@@ -21,7 +21,7 @@ ProGit 1장. 버전관리란?
 ⁃ Git은 데이터를 추가할뿐 </br>
 ⁃ 세가지 상태 : Committed, Modified, Staged </br>
 
-1.4 CLI(Command Line Interface)</br>
+1.4 CLI(Command Line Interface) </br>
 
 1.5 Git 설치</br>
 
@@ -34,7 +34,8 @@ ProGit 1장. 버전관리란?
 git config --global user.name "[이름]"</br>
 git config --global user.email "[이메일]"</br>
 
-⁃ 편집기</br>
+⁃ 편집기</br></br>
+
 ⁃ 설정 확인</br>
 git config --list</br>
 
