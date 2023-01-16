@@ -35,7 +35,6 @@ git config --global user.name "[이름]"</br>
 git config --global user.email "[이메일]"</br>
 
 ⁃ 편집기</br></br>
-
 ⁃ 설정 확인</br>
 git config --list</br>
 
