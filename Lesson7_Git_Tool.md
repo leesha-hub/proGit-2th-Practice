@@ -287,7 +287,7 @@ git bundle list-head ../commits.bundle</br>
 git fetch ../commits.bundle master:other-master</br>
 
 7.13 Replace</br>
-저장한 Git의 개체는 기본적으로 변경할 수 없다. 하지만 변경된 것처럼 보이게는 가능하다.</br>
+저장한 Git의 개체는 기본적으로 변경할 수 없다. 하지만 변경된 것처럼 보이게는 가능하다</br>
 1) 전체 히스토리 유지</br>
 git branch history [SHA-1]</br>
 git remote add project-history [저장소 주소]</br>
